@@ -1,6 +1,7 @@
 {% from "users/map.jinja" import users with context %}
 include:
   - users
+  - zsh
 
 {% for name, user in pillar.get('users', {}).items() if user.absent is not defined or not user.absent %}
 {%- set current = salt.user.info(name) -%}
@@ -8,26 +9,26 @@ include:
 {%- set user = {} -%}
 {%- endif -%}
 {%- set home = user.get('home', current.get('home', "/home/%s" % name)) -%}
-{%- set manage = user.get('manage_bashrc', False) -%}
+{%- set manage = user.get('manage_zshrc', False) -%}
 {%- if 'prime_group' in user and 'name' in user['prime_group'] %}
 {%- set user_group = user.prime_group.name -%}
 {%- else -%}
 {%- set user_group = name -%}
 {%- endif %}
 {%- if manage -%}
-users_{{ name }}_user_bashrc:
+users_{{ name }}_user_zshrc:
   file.managed:
-    - name: {{ home }}/.bashrc
+    - name: {{ home }}/.zshrc
     - user: {{ name }}
     - group: {{ user_group }}
     - mode: 644
-{%- if 'bashrc_content' in user and user.bashrc_content %}
-    - contents: |
-        {{ user.bashrc_content|indent(8) }}
+{%- if 'zshrc_content' in user and user.zshrc_content %}
+    - contents: | 
+        {{ user.zshrc_content|indent(8) }}
 {%- else %}
     - source: 
-      - salt://users/files/bashrc/{{ name }}/bashrc
-      - salt://users/files/bashrc/bashrc
+      - salt://users/files/zshrc/{{ name }}/zshrc
+      - salt://users/files/zshrc/zshrc
 {% endif %}
 {% endif %}
 {% endfor %}

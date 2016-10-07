@@ -20,7 +20,16 @@ users:
     homephone: "(555) 555-5551"
     manage_vimrc: False
     manage_bashrc: False
+    bashrc_content: |
+      things you would
+      put into your
+      .bashrc
     manage_profile: False
+    manage_zshrc: False
+    zshrc_content: |
+      things you would
+      put into your
+      .zshrc
     expire: 16426
     sudouser: True
     # sudo_rules doesn't need the username as a prefix for the rule

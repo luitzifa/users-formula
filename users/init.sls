@@ -3,12 +3,17 @@
 {% set used_sudo = [] %}
 {% set used_googleauth = [] %}
 {% set used_user_files = [] %}
+{% set used_shells = [] %}
 
 {%- for name, user in pillar.get('users', {}).items()
         if user.absent is not defined or not user.absent %}
 {%- if user == None -%}
 {%- set user = {} -%}
 {%- endif -%}
+{%- if 'shell' in user 
+      and 'zsh' in user.shell
+{%- do used_shells.append((user.shell.split("/")|last)) %}
+{%- endif %}
 {%- if 'sudouser' in user and user['sudouser'] %}
 {%- do used_sudo.append(1) %}
 {%- endif %}
@@ -20,8 +25,11 @@
 {%- endif %}
 {%- endfor %}
 
-{%- if used_sudo or used_googleauth or used_user_files %}
+{%- if used_sudo or used_googleauth or used_user_files or used_shells %}
 include:
+{%- for shell in used_shells %}
+  - {{ shell }}
+{%- endfor %}
 {%- if used_sudo %}
   - users.sudo
 {%- endif %}
