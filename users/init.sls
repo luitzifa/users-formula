@@ -11,7 +11,7 @@
 {%- set user = {} -%}
 {%- endif -%}
 {%- if 'shell' in user 
-      and 'zsh' in user.shell
+      and 'zsh' in user.shell %}
 {%- do used_shells.append((user.shell.split("/")|last)) %}
 {%- endif %}
 {%- if 'sudouser' in user and user['sudouser'] %}
